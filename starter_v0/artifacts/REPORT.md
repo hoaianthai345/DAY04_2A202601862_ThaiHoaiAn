@@ -16,42 +16,37 @@
 
 ## A1. Agent này làm được gì
 
-> 1–2 câu mô tả agent dùng để làm gì.
-
-Ví dụ: "Research agent: tìm tin theo từ khóa / theo tài khoản, đọc URL và tổng hợp thành digest."
+Research agent có khả năng phân tích thông tin mạng xã hội, tổng hợp tin tức web, đọc trực tiếp tài liệu từ URL và thêm tính năng **kiểm tra độ uy tín của nguồn**.
 
 **Link dùng thử (truy cập được trong showdown):**
 
-> Dán public URL nếu người khác cần mở từ máy riêng; localhost cũng được nếu demo trực tiếp trên máy trình chiếu. Streamlit được khuyến nghị, nhưng nhóm có thể dùng bất kỳ framework nào.
->
-> URL:
+> URL: http://localhost:8501
 
 ## A2. Tool agent có
-
-> Liệt kê các tool agent đang dùng. Mỗi tool 1 dòng: tên + làm được gì.
 
 | Tên tool | Làm được gì | Tool mới nhóm thêm? |
 |---|---|---|
 | clarify | hỏi lại người dùng khi thiếu thông tin | không |
-|  |  |  |
-|  |  |  |
+| timeline | lấy bài đăng gần đây của tài khoản | không |
+| social_search | tìm kiếm bài đăng trên mạng xã hội | không |
+| lookup | tìm kiếm thông tin thời sự trên web | không |
+| fetch | đọc và trích xuất nội dung từ URL | không |
+| format | định dạng lại thông tin thành markdown digest | không |
+| source_check | kiểm tra mức độ uy tín và nguồn gốc của một URL | có |
 
 ## A3. Câu hỏi mẫu để thử
 
-> 3–5 câu hỏi/yêu cầu mẫu để team khác tự thử agent ngay.
-
-1.
-2.
-3.
+1. Tóm tắt 5 bài tweet mới nhất của Sam Altman giúp mình.
+2. Tìm tin tức nổi bật về GPT-5 hôm nay và định dạng lại thành báo cáo.
+3. Kiểm tra xem link https://openai.com/index/introducing-gpt-5 có phải là nguồn chính thức đáng tin cậy để trích dẫn không?
 
 ## A4. Kịch bản demo đã rehearse
 
-> Chuẩn bị 3–5 scenario. Mỗi scenario cần cho thấy tool đã làm gì và một thay đổi cụ thể giữa các version.
-
 | Scenario | Tool trace cần thấy | Câu chuyện cải thiện version | Fallback run/transcript |
 |---|---|---|---|
-|  |  |  |  |
-
+| Tìm tin tức kết hợp | `lookup` -> `format` | Tối ưu prompt để agent không dùng nhầm timeline khi hỏi tin chung | (điền sau) |
+| Đổi URL giữa chừng (Multi-turn) | `clarify` -> `source_check` | Agent biết cập nhật ngữ cảnh URL mới nhất từ user qua nhiều lượt chat | (điền sau) |
+| Phân biệt Đọc bài vs Kiểm tra nguồn | `source_check` thay vì `fetch` | Sửa mô tả tool để agent hiểu rõ khi nào cần "kiểm tra độ uy tín" thay vì chỉ "đọc nội dung" | (điền sau) |
 ---
 
 # PHẦN B — Chi tiết / Bằng chứng
