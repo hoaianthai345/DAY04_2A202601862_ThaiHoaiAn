@@ -80,20 +80,20 @@ Các run OpenRouter v0–v3 được dùng trong bảng đều có 20/20 measure
 
 ## B3. Team eval cases
 
-Team eval có đúng 10 case: 5 single-turn và 5 multi-turn. Đã có group run v3 bằng Groq, nhưng chỉ đo được 7/10 case do 3 provider errors; cần rerun bằng OpenRouter trước khi dùng metric trong report.
+Team eval có đúng 10 case: 5 single-turn và 5 multi-turn. Run hiện có là `runs/v3_B_group_groq_20260729T154756623885.json` trên artifact `v3+p4981cd3bff5d+t8bac9d4a5634`. Cả 7 case được đo đều PASS (case/tool-routing/argument/multi-turn accuracy đều 1.00 trong measured subset), nhưng 3/10 case bị provider error. Vì vậy đây là evidence routing tốt nhưng **chưa phải metric group hợp lệ**; cần rerun bằng OpenRouter để đạt `measured_cases = total_cases` và `provider_error_cases = 0`.
 
 | Case ID | What It Tests | Expected Tool/Behavior | Result |
 |---|---|---|---|
-| G01 | URL OpenAI có phải nguồn official. | `source_check` với URL OpenAI. | Pending group run |
-| G02 | Phân biệt kiểm tra provenance với đọc paper. | `source_check` với URL arXiv. | Pending group run |
-| G03 | Không tự khẳng định uy tín domain chưa trong allowlist. | `source_check` với URL unknown. | Pending group run |
-| G04 | Thiếu URL để kiểm tra nguồn. | `clarify(response_type="text")`. | Pending group run |
-| G05 | Hỏi capability của tool. | Không gọi tool. | Pending group run |
-| GM01 | Carry handle và limit sau correction. | `timeline(screenname="AndrewYNg", limit=7)`. | PASS trong measured subset |
-| GM02 | Đổi từ kiểm tra nguồn sang đọc URL. | `fetch` URL Anthropic. | PASS trong measured subset |
-| GM03 | URL được sửa ở lượt cuối. | `source_check` URL OpenAI mới. | PASS trong measured subset |
-| GM04 | Confirmation trước Telegram action. | `clarify(response_type="yes_no")`. | Provider error; rerun required |
-| GM05 | Đổi từ social sang web news. | `lookup(query="Gemini AI", topic="news", timeframe="week")`. | Provider error; rerun required |
+| G01 | URL OpenAI có phải nguồn official. | `source_check` với URL OpenAI. | PASS — gọi đúng `source_check`. |
+| G02 | Phân biệt kiểm tra provenance với đọc paper. | `source_check` với URL arXiv. | PASS — gọi đúng `source_check`. |
+| G03 | Không tự khẳng định uy tín domain chưa trong allowlist. | `source_check` với URL unknown. | PASS — gọi đúng `source_check`. |
+| G04 | Thiếu URL để kiểm tra nguồn. | `clarify(response_type="text")`. | Provider error: Groq rate limit; rerun required. |
+| G05 | Hỏi capability của tool. | Không gọi tool. | PASS — không gọi tool. |
+| GM01 | Carry handle và limit sau correction. | `timeline(screenname="AndrewYNg", limit=7)`. | PASS — giữ `limit=7`, đổi đúng handle. |
+| GM02 | Đổi từ kiểm tra nguồn sang đọc URL. | `fetch` URL Anthropic. | PASS — gọi đúng `fetch`. |
+| GM03 | URL được sửa ở lượt cuối. | `source_check` URL OpenAI mới. | PASS — dùng URL đã sửa. |
+| GM04 | Confirmation trước Telegram action. | `clarify(response_type="yes_no")`. | Provider error: Groq tool-use failed; rerun required. |
+| GM05 | Đổi từ social sang web news. | `lookup(query="Gemini AI", topic="news", timeframe="week")`. | Provider error: Groq rate limit; rerun required. |
 
 ## B4. Live chat evidence
 
