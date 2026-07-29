@@ -3,5 +3,51 @@
   "dataset_role": "group",
   "description": "Template để NHÓM tự viết đúng 10 case: 5 single-turn dùng query và 5 multi-turn dùng turns. Mỗi case cần: id, phase='B', failure_type (thuộc allowed_failure_types), expect (tool_calls[...] hoặc no_tool=true), và metadata.what_it_tests. File để trống có chủ đích vì mỗi nhóm phải tự thiết kế các case này.",
   "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "cases": [
+    {
+      "id": "G01_official_source_check",
+      "phase": "B",
+      "suite": "group",
+      "query": "Link https://openai.com/index/introducing-gpt-5 có phải nguồn chính thức của OpenAI không?",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "source_check", "args": {"url": "https://openai.com/index/introducing-gpt-5"}}]},
+      "metadata": {"what_it_tests": "Đánh giá provenance của URL đã cho phải dùng source_check, không cần fetch hoặc lookup."}
+    },
+    {
+      "id": "G02_research_source_check",
+      "phase": "B",
+      "suite": "group",
+      "query": "Trước khi trích dẫn https://arxiv.org/abs/1706.03762, kiểm tra giúp mình đây thuộc loại nguồn nào.",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "source_check", "args": {"url": "https://arxiv.org/abs/1706.03762"}}]},
+      "metadata": {"what_it_tests": "Phân biệt yêu cầu kiểm tra nguồn với yêu cầu đọc nội dung paper."}
+    },
+    {
+      "id": "G03_source_check_unknown_domain",
+      "phase": "B",
+      "suite": "group",
+      "query": "Đánh giá nhanh độ phù hợp để trích dẫn của link https://example.org/ai-report.",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "source_check", "args": {"url": "https://example.org/ai-report"}}]},
+      "metadata": {"what_it_tests": "URL chưa có trong allowlist vẫn phải được kiểm tra provenance thay vì model tự khẳng định uy tín."}
+    },
+    {
+      "id": "G04_source_check_no_url",
+      "phase": "B",
+      "suite": "group",
+      "query": "Kiểm tra nguồn này có đáng tin để trích dẫn không?",
+      "failure_type": "missing_info",
+      "expect": {"tool_calls": [{"name": "clarify", "args": {"response_type": "text"}}]},
+      "metadata": {"what_it_tests": "Thiếu URL cho tác vụ provenance phải hỏi lại, không tự đoán nguồn."}
+    },
+    {
+      "id": "G05_meta_source_check",
+      "phase": "B",
+      "suite": "group",
+      "query": "Tool source_check của bạn làm được gì?",
+      "failure_type": "unnecessary_tool",
+      "expect": {"no_tool": true, "behavior": "answer_without_tool"},
+      "metadata": {"what_it_tests": "Câu hỏi về capability phải trả lời trực tiếp, không gọi chính tool đó."}
+    }
+  ]
 }

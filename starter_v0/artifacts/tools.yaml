@@ -56,6 +56,14 @@ tools:
         url: {type: string, default: "", description: "Địa chỉ"}
       required: [url]
 
+  - name: source_check
+    description: "Kiểm tra loại nguồn của một URL: trang chính thức, kho nghiên cứu, báo chí đã biết hoặc chưa phân loại. Chỉ dùng khi cần đánh giá provenance/độ phù hợp để trích dẫn của URL đã có; không đọc nội dung trang."
+    parameters:
+      type: object
+      properties:
+        url: {type: string, description: "URL http(s) tuyệt đối cần kiểm tra"}
+      required: [url]
+
   - name: format
     description: "Trình bày dữ liệu đã có thành văn bản."
     parameters:
