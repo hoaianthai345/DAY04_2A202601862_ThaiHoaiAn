@@ -9,8 +9,8 @@
 |---------|-----------------|-------------|------------|:---:|---|
 | v0 | _(baseline)_ | `peb1c8179815b` | `tfd938035f130` | 26.32% | Chưa thay đổi gì |
 | v1 | `system_prompt.md` | `pd08ac2aa26dd` | `tfd938035f130` | 60.00% | Rewrite toàn bộ system prompt |
-| v2 | `tools.yaml` | `pd08ac2aa26dd` | `t8bac9d4a5634` | 84.21% | Sharpen tool descriptions |
-| v3 | `system_prompt.md` | `p4981cd3bff5d` | `t8bac9d4a5634` | 84.21% | Refine query rules + parallel call |
+| v2 | `tools.yaml` | `pd08ac2aa26dd` | `t8bac9d4a5634` | 90.00% | Sharpen tool descriptions |
+| v3 | `system_prompt.md` | `p4981cd3bff5d` | `t8bac9d4a5634` | 90.00% | Refine query rules + parallel call |
 
 ---
 
