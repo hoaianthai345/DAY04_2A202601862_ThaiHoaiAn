@@ -48,6 +48,67 @@
       "failure_type": "unnecessary_tool",
       "expect": {"no_tool": true, "behavior": "answer_without_tool"},
       "metadata": {"what_it_tests": "Câu hỏi về capability phải trả lời trực tiếp, không gọi chính tool đó."}
+    },
+    {
+      "id": "G06_clarify_then_source_check",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Kiểm tra độ tin cậy của link này giúp mình"},
+        {"role": "user", "content": "À đây, link này nhé: https://huggingface.co"}
+      ],
+      "failure_type": "missing_info",
+      "expect": {"tool_calls": [{"name": "source_check", "args": {"url": "https://huggingface.co"}}]},
+      "metadata": {"what_it_tests": "Multi-turn: Lượt đầu thiếu URL, lượt sau bổ sung URL thì gọi đúng source_check."}
+    },
+    {
+      "id": "G07_change_url_source_check",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Nguồn https://example.com có uy tín không?"},
+        {"role": "user", "content": "Nhầm, mình muốn kiểm tra link https://github.com cơ"}
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "source_check", "args": {"url": "https://github.com"}}]},
+      "metadata": {"what_it_tests": "Multi-turn: Sửa URL trong lượt sau, agent phải lấy URL mới nhất để check."}
+    },
+    {
+      "id": "G08_switch_fetch_to_source_check",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Tóm tắt bài viết ở link https://arxiv.org/abs/1706.03762"},
+        {"role": "user", "content": "Thôi khoan tóm tắt, kiểm tra xem link đó có phải nguồn chính thức không đã"}
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "source_check", "args": {"url": "https://arxiv.org/abs/1706.03762"}}]},
+      "metadata": {"what_it_tests": "Multi-turn: Đổi ý từ fetch sang source_check, vẫn giữ nguyên URL cũ."}
+    },
+    {
+      "id": "G09_source_check_with_context",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Mình đang viết một bài báo khoa học về AI"},
+        {"role": "user", "content": "Bạn xem nguồn này có dùng được không: https://nature.com"}
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "source_check", "args": {"url": "https://nature.com"}}]},
+      "metadata": {"what_it_tests": "Multi-turn: Phân tích ngữ cảnh hội thoại để hiểu câu hỏi 'dùng được không' ám chỉ kiểm tra độ uy tín."}
+    },
+    {
+      "id": "G10_source_check_clarify_again",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Kiểm tra độ uy tín nguồn này nhé"},
+        {"role": "user", "content": "Ủa mình chưa đưa link à?"},
+        {"role": "user", "content": "Đây nhé: https://wikipedia.org"}
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "source_check", "args": {"url": "https://wikipedia.org"}}]},
+      "metadata": {"what_it_tests": "Multi-turn 3 lượt: Chờ đến lượt 3 mới có URL thì vẫn phải gọi đúng tool."}
     }
   ]
 }
