@@ -69,7 +69,7 @@ def main() -> None:
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         with args.output.open("w", encoding="utf-8", newline="") as file:
-            writer = csv.DictWriter(file, fieldnames=fieldnames)
+            writer = csv.DictWriter(file, fieldnames=fieldnames, lineterminator="\n")
             writer.writeheader()
             writer.writerows(rows)
         print(f"Saved {len(rows)} rows to {args.output}")
@@ -84,4 +84,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
