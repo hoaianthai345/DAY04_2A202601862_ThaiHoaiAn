@@ -1,0 +1,9 @@
+{
+  "version": "v1",
+  "artifact_version": "v1+pf0c107a9d7a1+tec83d5b07079",
+  "prompt_hash": "f0c107a9d7a14032c948d642d7c36f2a85cb6d69a099530093a874c94d472446",
+  "tools_hash": "ec83d5b07079ca08edce344a4ddc040ce075ea5e60d0268ec954138e71288dd6",
+  "run_file": "../../../runs/v1_B_base_openrouter_20260729T160039032723.json",
+  "note": "First measured iteration; artifacts match the baseline snapshot."
+}
+

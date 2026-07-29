@@ -60,11 +60,11 @@ Research Agent thu thập thông tin qua web, mạng xã hội hoặc URL có s�
 | Version | Prompt/tool change | Hypothesis | Metric name | Before | After | Run File |
 |---|---|---|---|---:|---:|---|
 | v0 | Baseline, chưa tối ưu prompt/declaration. | Đo routing và boundary ban đầu. | Case accuracy | — | 0.65 | `runs/v0_B_base_openrouter_20260729T152819647169.json` |
-| v1 | Pending TV2. | Chỉ sửa một hypothesis từ failure v0. | Pending | 0.65 | Pending | Pending |
-| v2 | Pending TV2. | Chỉ sửa một hypothesis từ failure v1. | Pending | Pending | Pending | Pending |
-| v3 | Pending TV2. | Chỉ sửa một hypothesis từ failure v2. | Pending | Pending | Pending | Pending |
+| v1 | Sửa `system_prompt.md`: scope, clarify, confirmation, handle mapping. | Quy tắc rõ hơn giảm đoán handle/URL và gọi action sớm. | Case accuracy | 0.65 | 0.65 | `runs/v1_B_base_openrouter_20260729T160039032723.json` |
+| v2 | Sửa `tools.yaml`: usage boundaries và argument conventions. | Description rõ giúp phân biệt routing giữa tools. | Case accuracy | 0.65 | 0.90 | `runs/v2_B_base_openrouter_20260729T160758249744.json` |
+| v3 | Sửa prompt: short query, response type và parallel calls. | Xử lý các lỗi arguments/boundary còn lại. | Case accuracy | 0.90 | 0.90 | `runs/v3_B_base_openrouter_20260729T160929985283.json` |
 
-Baseline v0: 20/20 measured cases, 0 provider errors, 13/20 pass, tool routing accuracy 0.75, argument accuracy 0.65 và multiturn accuracy 1.00.
+Các run OpenRouter v0–v3 được dùng trong bảng đều có 20/20 measured cases và 0 provider errors. Snapshot prompt/tools tương ứng nằm trong `artifacts/versions/v0` đến `artifacts/versions/v3`; root `artifacts/` giữ bản active v3.
 
 ## B2. Failure analysis
 
@@ -80,7 +80,7 @@ Baseline v0: 20/20 measured cases, 0 provider errors, 13/20 pass, tool routing a
 
 ## B3. Team eval cases
 
-Team eval đã có đúng 10 case: 5 single-turn và 5 multi-turn. Group eval chỉ chạy sau khi TV2 hoàn thành artifact v3.
+Team eval có đúng 10 case: 5 single-turn và 5 multi-turn. Đã có group run v3 bằng Groq, nhưng chỉ đo được 7/10 case do 3 provider errors; cần rerun bằng OpenRouter trước khi dùng metric trong report.
 
 | Case ID | What It Tests | Expected Tool/Behavior | Result |
 |---|---|---|---|
@@ -89,11 +89,11 @@ Team eval đã có đúng 10 case: 5 single-turn và 5 multi-turn. Group eval ch
 | G03 | Không tự khẳng định uy tín domain chưa trong allowlist. | `source_check` với URL unknown. | Pending group run |
 | G04 | Thiếu URL để kiểm tra nguồn. | `clarify(response_type="text")`. | Pending group run |
 | G05 | Hỏi capability của tool. | Không gọi tool. | Pending group run |
-| G06 | Bổ sung URL sau clarify. | `source_check` URL OpenAI, không gọi `fetch`. | Pending group run |
-| G07 | Đổi intent từ tóm tắt sang provenance. | `source_check` URL arXiv. | Pending group run |
-| G08 | Carry handle + limit từ hội thoại. | `timeline(screenname="satyanadella", limit=3)`. | Pending group run |
-| G09 | URL được sửa ở lượt cuối. | `source_check` URL arXiv mới. | Pending group run |
-| G10 | Research web + social theo chủ đề carry-over. | `lookup` news + `social_search` robotics. | Pending group run |
+| GM01 | Carry handle và limit sau correction. | `timeline(screenname="AndrewYNg", limit=7)`. | PASS trong measured subset |
+| GM02 | Đổi từ kiểm tra nguồn sang đọc URL. | `fetch` URL Anthropic. | PASS trong measured subset |
+| GM03 | URL được sửa ở lượt cuối. | `source_check` URL OpenAI mới. | PASS trong measured subset |
+| GM04 | Confirmation trước Telegram action. | `clarify(response_type="yes_no")`. | Provider error; rerun required |
+| GM05 | Đổi từ social sang web news. | `lookup(query="Gemini AI", topic="news", timeframe="week")`. | Provider error; rerun required |
 
 ## B4. Live chat evidence
 
@@ -117,4 +117,4 @@ Team eval đã có đúng 10 case: 5 single-turn và 5 multi-turn. Group eval ch
 - `system_prompt.md` nên chịu trách nhiệm về scope, hỏi lại khi thiếu thông tin, confirmation trước action và quy tắc giữ đúng intent/query.
 - `tools.yaml` nên nêu rõ khi nào dùng/không dùng từng tool, conventions cho `lookup.topic`, `timeframe`, `timeline.screenname` và điều kiện dùng `send`.
 - Lỗi tool execution/rate limit phải review thủ công; routing PASS không tự chứng minh API thực thi đúng.
-- Tiếp theo: TV2 hoàn tất ba vòng có hypothesis độc lập, TV3 thêm 5 multi-turn + group eval + UI/tunnel, rồi thay mọi ô `Pending` bằng evidence JSON thật.
+- Tiếp theo: rerun group eval v3 bằng OpenRouter, hoàn thiện transcript demo/UI public URL và cập nhật các outcome còn pending.

@@ -1,0 +1,9 @@
+{
+  "version": "v3",
+  "artifact_version": "v3+p4981cd3bff5d+t8bac9d4a5634",
+  "prompt_hash": "4981cd3bff5d16397c72a79115471b6b00e2d7be46ec6f81f1ad9c9a0a460579",
+  "tools_hash": "8bac9d4a5634ee1bebce36dcf4307437410c36957b48e5491e9f0feb51b7882c",
+  "run_file": "../../../runs/v3_B_base_openrouter_20260729T160929985283.json",
+  "note": "Final verified artifact; mirrored by the active root artifacts."
+}
+
