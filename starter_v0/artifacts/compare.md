@@ -1,9 +1,4 @@
 # Version Compare — DAY04_2A202601862_ThaiHoaiAn
-
-**Author:** ThaiHoaiAn  
-**Generated:** 2026-07-29  
-**Artifact snapshots reconstructed từ git history (commits: `2d069f7`, `f130d52`, current)**
-
 > Lưu ý: artifacts/ chỉ lưu file hiện tại (overwrite mỗi version). File này snapshot lại toàn bộ nội dung từng version để so sánh.
 
 ---
@@ -279,11 +274,11 @@ Giữ nguyên descriptions từ v2. Xem bảng v2 ở trên.
 
 ## So sánh nhanh: điều gì thực sự tạo ra sự thay đổi
 
-| Thay đổi | Delta Accuracy | Lý do hiệu quả |
+| Thay đổi | Delta Accuracy (openrouter) | Lý do hiệu quả |
 |----------|:---:|---|
-| v0→v1: Rewrite system_prompt | +33.68pp | Từ "đoán tùy tiện" sang "hỏi khi thiếu info" — loại bỏ missing_info và wrong_boundary |
-| v1→v2: Sharpen tool descriptions | +24.21pp | Description dài + boundary rõ loại bỏ routing confusion timeline↔social_search, lookup↔fetch |
-| v2→v3: Add query rules + parallel | ±0pp | Rule đúng nhưng không nhắm vào root cause của M02/M06 |
+| v0→v1: Rewrite system_prompt | +65.00% (13/20) | Từ "đoán tùy tiện" sang "hỏi khi thiếu info" — loại bỏ missing_info và wrong_boundary |
+| v1→v2: Sharpen tool descriptions | +25pp → 90.00% (18/20) | Description dài + boundary rõ loại bỏ routing confusion timeline↔social_search, lookup↔fetch |
+| v2→v3: Add query rules + parallel | ±0pp → 90.00% (18/20) | Rule đúng nhưng không nhắm vào root cause của M02/M06 |
 
 ## Lỗi còn lại sau v3 (cả 2 provider)
 
