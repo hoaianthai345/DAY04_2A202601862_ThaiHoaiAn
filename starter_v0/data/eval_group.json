@@ -50,65 +50,69 @@
       "metadata": {"what_it_tests": "Câu hỏi về capability phải trả lời trực tiếp, không gọi chính tool đó."}
     },
     {
-      "id": "G06_clarify_then_source_check",
+      "id": "GM01_carryover_handle_limit",
       "phase": "B",
       "suite": "group",
       "turns": [
-        {"role": "user", "content": "Kiểm tra độ tin cậy của link này giúp mình"},
-        {"role": "user", "content": "À đây, link này nhé: https://huggingface.co"}
-      ],
-      "failure_type": "missing_info",
-      "expect": {"tool_calls": [{"name": "source_check", "args": {"url": "https://huggingface.co"}}]},
-      "metadata": {"what_it_tests": "Multi-turn: Lượt đầu thiếu URL, lượt sau bổ sung URL thì gọi đúng source_check."}
-    },
-    {
-      "id": "G07_change_url_source_check",
-      "phase": "B",
-      "suite": "group",
-      "turns": [
-        {"role": "user", "content": "Nguồn https://example.com có uy tín không?"},
-        {"role": "user", "content": "Nhầm, mình muốn kiểm tra link https://github.com cơ"}
+        {"role": "user", "content": "Lấy 7 tweet mới nhất của Yann LeCun giúp mình"},
+        {"role": "user", "content": "À mình muốn tweet của Andrew Ng thay vì Yann LeCun"},
+        {"role": "user", "content": "Vẫn giữ đúng 7 tweet nhé"}
       ],
       "failure_type": "wrong_arg_value",
-      "expect": {"tool_calls": [{"name": "source_check", "args": {"url": "https://github.com"}}]},
-      "metadata": {"what_it_tests": "Multi-turn: Sửa URL trong lượt sau, agent phải lấy URL mới nhất để check."}
+      "expect": {"tool_calls": [{"name": "timeline", "args": {"screenname": "AndrewYNg", "limit": 7}}]},
+      "metadata": {"what_it_tests": "3 turns: sửa handle từ Yann LeCun sang Andrew Ng (map sang AndrewYNg), carry limit=7 từ lượt 1 sang lượt cuối."}
     },
     {
-      "id": "G08_switch_fetch_to_source_check",
+      "id": "GM02_source_check_then_fetch",
       "phase": "B",
       "suite": "group",
       "turns": [
-        {"role": "user", "content": "Tóm tắt bài viết ở link https://arxiv.org/abs/1706.03762"},
-        {"role": "user", "content": "Thôi khoan tóm tắt, kiểm tra xem link đó có phải nguồn chính thức không đã"}
+        {"role": "user", "content": "Link https://anthropic.com/news/claude-3 này là nguồn loại gì?"},
+        {"role": "user", "content": "Tốt rồi, giờ đọc nội dung trang đó giúp mình"},
+        {"role": "user", "content": "Chỉ đọc đúng link https://anthropic.com/news/claude-3 đó thôi"}
       ],
       "failure_type": "wrong_tool",
-      "expect": {"tool_calls": [{"name": "source_check", "args": {"url": "https://arxiv.org/abs/1706.03762"}}]},
-      "metadata": {"what_it_tests": "Multi-turn: Đổi ý từ fetch sang source_check, vẫn giữ nguyên URL cũ."}
+      "expect": {"tool_calls": [{"name": "fetch", "args": {"url": "https://anthropic.com/news/claude-3"}}]},
+      "metadata": {"what_it_tests": "3 turns: sau source_check, user chuyển sang yêu cầu đọc nội dung → phải dùng fetch, không dùng source_check lần 2."}
     },
     {
-      "id": "G09_source_check_with_context",
+      "id": "GM03_correct_url_then_check",
       "phase": "B",
       "suite": "group",
       "turns": [
-        {"role": "user", "content": "Mình đang viết một bài báo khoa học về AI"},
-        {"role": "user", "content": "Bạn xem nguồn này có dùng được không: https://nature.com"}
-      ],
-      "failure_type": "wrong_tool",
-      "expect": {"tool_calls": [{"name": "source_check", "args": {"url": "https://nature.com"}}]},
-      "metadata": {"what_it_tests": "Multi-turn: Phân tích ngữ cảnh hội thoại để hiểu câu hỏi 'dùng được không' ám chỉ kiểm tra độ uy tín."}
-    },
-    {
-      "id": "G10_source_check_clarify_again",
-      "phase": "B",
-      "suite": "group",
-      "turns": [
-        {"role": "user", "content": "Kiểm tra độ uy tín nguồn này nhé"},
-        {"role": "user", "content": "Ủa mình chưa đưa link à?"},
-        {"role": "user", "content": "Đây nhé: https://wikipedia.org"}
+        {"role": "user", "content": "Kiểm tra nguồn của link này: https://openai.com/blog"},
+        {"role": "user", "content": "Nhầm rồi, link đúng là https://openai.com/research/gpt-4"},
+        {"role": "user", "content": "Dùng link thứ 2 nhé"}
       ],
       "failure_type": "wrong_arg_value",
-      "expect": {"tool_calls": [{"name": "source_check", "args": {"url": "https://wikipedia.org"}}]},
-      "metadata": {"what_it_tests": "Multi-turn 3 lượt: Chờ đến lượt 3 mới có URL thì vẫn phải gọi đúng tool."}
+      "expect": {"tool_calls": [{"name": "source_check", "args": {"url": "https://openai.com/research/gpt-4"}}]},
+      "metadata": {"what_it_tests": "3 turns: user đính chính URL ở lượt 2, lượt 3 xác nhận → phải dùng URL được sửa (link thứ 2), không phải link đầu tiên."}
+    },
+    {
+      "id": "GM04_confirm_before_send",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Gửi tin nhắn này lên Telegram: 'Báo cáo AI hôm nay đã sẵn sàng'"},
+        {"role": "user", "content": "Tôi nghĩ bạn cần hỏi tôi có muốn gửi không trước"},
+        {"role": "user", "content": "Đúng rồi, hỏi xác nhận trước khi gửi"}
+      ],
+      "failure_type": "wrong_boundary",
+      "expect": {"tool_calls": [{"name": "clarify", "args": {"response_type": "yes_no"}}]},
+      "metadata": {"what_it_tests": "3 turns: user nhắc agent phải xác nhận trước action ghi (send) → agent phải gọi clarify yes_no, không tự gửi."}
+    },
+    {
+      "id": "GM05_switch_from_twitter_to_web",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Tìm tweet về Gemini AI gần đây"},
+        {"role": "user", "content": "Thôi không cần Twitter nữa, tìm trên web tin tức đi"},
+        {"role": "user", "content": "Tin trong tuần này thôi, chủ đề Gemini AI"}
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "lookup", "args": {"query": "Gemini AI", "topic": "news", "timeframe": "week"}}]},
+      "metadata": {"what_it_tests": "3 turns: user chuyển từ social_search sang web search (lookup), carry chủ đề Gemini AI, timeframe=week từ 'tuần này'."}
     }
   ]
 }

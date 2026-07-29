@@ -1,0 +1,35 @@
+﻿Running G01_official_source_check...
+Running G02_research_source_check...
+Running G03_source_check_unknown_domain...
+Running G04_source_check_no_url...
+Running G05_meta_source_check...
+Running GM01_carryover_handle_limit...
+Running GM02_source_check_then_fetch...
+Running GM03_correct_url_then_check...
+Running GM04_confirm_before_send...
+Running GM05_switch_from_twitter_to_web...
+G01_official_source_check    PASS  
+G02_research_source_check    PASS  
+G03_source_check_unknown_domain PASS  
+G04_source_check_no_url      FAIL  provider_error
+G05_meta_source_check        PASS  
+GM01_carryover_handle_limit  PASS  
+GM02_source_check_then_fetch PASS  
+GM03_correct_url_then_check  PASS  
+GM04_confirm_before_send     FAIL  provider_error
+GM05_switch_from_twitter_to_web FAIL  provider_error
+
+total_cases: 10
+measured_cases: 7
+provider_error_cases: 3
+passed_cases: 7
+case_accuracy: 1.0
+tool_routing_accuracy: 1.0
+argument_accuracy: 1.0
+multiturn_accuracy: 1.0
+failure_counts: {}
+observed_mismatch_counts: {}
+
+Artifact version: v3+p4981cd3bff5d+t8bac9d4a5634
+
+Saved: E:\VinUni_1\DAY04_2A202601862_ThaiHoaiAn\starter_v0\runs\v3_B_group_groq_20260729T154756623885.json

@@ -1,0 +1,650 @@
+{
+  "run_id": "v3_B_group_groq_20260729T154756623885",
+  "version": "v3",
+  "artifact_version": "v3+p4981cd3bff5d+t8bac9d4a5634",
+  "prompt_hash": "4981cd3bff5d16397c72a79115471b6b00e2d7be46ec6f81f1ad9c9a0a460579",
+  "tools_hash": "8bac9d4a5634ee1bebce36dcf4307437410c36957b48e5491e9f0feb51b7882c",
+  "phase": "B",
+  "suite": "group",
+  "provider": "groq",
+  "model": "qwen/qwen3.6-27b",
+  "system_prompt": "E:\\VinUni_1\\DAY04_2A202601862_ThaiHoaiAn\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "E:\\VinUni_1\\DAY04_2A202601862_ThaiHoaiAn\\starter_v0\\artifacts\\tools.yaml",
+  "eval_cases": "data\\eval_group.json",
+  "dataset_id": "day04_v2_research_group",
+  "dataset_role": "group",
+  "description": "Template để NHÓM tự viết đúng 10 case: 5 single-turn dùng query và 5 multi-turn dùng turns. Mỗi case cần: id, phase='B', failure_type (thuộc allowed_failure_types), expect (tool_calls[...] hoặc no_tool=true), và metadata.what_it_tests. File để trống có chủ đích vì mỗi nhóm phải tự thiết kế các case này.",
+  "generated_at": "2026-07-29T15:47:56",
+  "summary": {
+    "total_cases": 10,
+    "measured_cases": 7,
+    "provider_error_cases": 3,
+    "passed_cases": 7,
+    "case_accuracy": 1.0,
+    "tool_routing_accuracy": 1.0,
+    "argument_accuracy": 1.0,
+    "multiturn_accuracy": 1.0,
+    "failure_counts": {},
+    "observed_mismatch_counts": {}
+  },
+  "results": [
+    {
+      "id": "G01_official_source_check",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Đánh giá provenance của URL đã cho phải dùng source_check, không cần fetch hoặc lookup."
+      },
+      "input": "Link https://openai.com/index/introducing-gpt-5 có phải nguồn chính thức của OpenAI không?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "source_check",
+            "args": {
+              "url": "https://openai.com/index/introducing-gpt-5"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "source_check",
+            "args": {
+              "url": "https://openai.com/index/introducing-gpt-5"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "source_check",
+          "args": {
+            "url": "https://openai.com/index/introducing-gpt-5"
+          },
+          "result": {
+            "tool": "source_check",
+            "url": "https://openai.com/index/introducing-gpt-5",
+            "domain": "openai.com",
+            "source_type": "official",
+            "organization": "OpenAI",
+            "citation_guidance": "Primary source: cite it for statements made by this organization."
+          }
+        }
+      ]
+    },
+    {
+      "id": "G02_research_source_check",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Phân biệt yêu cầu kiểm tra nguồn với yêu cầu đọc nội dung paper."
+      },
+      "input": "Trước khi trích dẫn https://arxiv.org/abs/1706.03762, kiểm tra giúp mình đây thuộc loại nguồn nào.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "source_check",
+            "args": {
+              "url": "https://arxiv.org/abs/1706.03762"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "source_check",
+            "args": {
+              "url": "https://arxiv.org/abs/1706.03762"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "source_check",
+          "args": {
+            "url": "https://arxiv.org/abs/1706.03762"
+          },
+          "result": {
+            "tool": "source_check",
+            "url": "https://arxiv.org/abs/1706.03762",
+            "domain": "arxiv.org",
+            "source_type": "research_archive",
+            "organization": null,
+            "citation_guidance": "Research source: check the paper authors, date, and version before citing conclusions."
+          }
+        }
+      ]
+    },
+    {
+      "id": "G03_source_check_unknown_domain",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "URL chưa có trong allowlist vẫn phải được kiểm tra provenance thay vì model tự khẳng định uy tín."
+      },
+      "input": "Đánh giá nhanh độ phù hợp để trích dẫn của link https://example.org/ai-report.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "source_check",
+            "args": {
+              "url": "https://example.org/ai-report"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "source_check",
+            "args": {
+              "url": "https://example.org/ai-report"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "source_check",
+          "args": {
+            "url": "https://example.org/ai-report"
+          },
+          "result": {
+            "tool": "source_check",
+            "url": "https://example.org/ai-report",
+            "domain": "example.org",
+            "source_type": "unclassified",
+            "organization": null,
+            "citation_guidance": "The domain is not in this local allowlist; inspect authorship, date, and corroborating sources before citing it."
+          }
+        }
+      ]
+    },
+    {
+      "id": "G04_source_check_no_url",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Thiếu URL cho tác vụ provenance phải hỏi lại, không tự đoán nguồn."
+      },
+      "input": "Kiểm tra nguồn này có đáng tin để trích dẫn không?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "missing_info",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `qwen/qwen3.6-27b` in organization `org_01kcnaxwkgeb48zwrp59sqcpjg` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 4564, Requested 4174. Please try again in 5.535s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G05_meta_source_check",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Câu hỏi về capability phải trả lời trực tiếp, không gọi chính tool đó."
+      },
+      "input": "Tool source_check của bạn làm được gì?",
+      "expect": {
+        "no_tool": true,
+        "behavior": "answer_without_tool"
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "Công cụ `source_check` dùng để **kiểm tra loại nguồn và độ tin cậy** của một URL cụ thể mà bạn cung cấp.\n\nCụ thể, nó sẽ phân loại trang web đó thuộc nhóm nào:\n*   Trang chính thức (Official site)\n*   Kho nghiên cứu (Research repository)\n*   Báo chí đã biết (Known news outlet)\n*   Chưa phân loại (Unclassified)\n\nCông cụ này hữu ích khi bạn cần đánh giá xem một nguồn tin có đáng tin cậy để trích dẫn hay không. Lưu ý rằng nó **chỉ kiểm tra loại nguồn**, không đọc hay tóm tắt nội dung bên trong trang web.",
+        "case_failure_type": "unnecessary_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    },
+    {
+      "id": "GM01_carryover_handle_limit",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "3 turns: sửa handle từ Yann LeCun sang Andrew Ng (map sang AndrewYNg), carry limit=7 từ lượt 1 sang lượt cuối."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Lấy 7 tweet mới nhất của Yann LeCun giúp mình"
+        },
+        {
+          "role": "user",
+          "content": "À mình muốn tweet của Andrew Ng thay vì Yann LeCun"
+        },
+        {
+          "role": "user",
+          "content": "Vẫn giữ đúng 7 tweet nhé"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "AndrewYNg",
+              "limit": 7
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "limit": 7,
+              "screenname": "AndrewYNg"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "timeline",
+          "args": {
+            "limit": 7,
+            "screenname": "AndrewYNg"
+          },
+          "result": {
+            "tool": "get_user_tweets",
+            "screenname": "AndrewYNg",
+            "items": [
+              {
+                "title": "Fifteen years ago, @Coursera and online courses changed education. It worked better than almost anyone expected, expandi",
+                "summary": "Fifteen years ago, @Coursera and online courses changed education. It worked better than almost anyone expected, expanding access by opening up where you can learn. But how you learn remains largely the same as it has for centuries: it is still one-size-fits-all, taught the same way to each person who shows up.\n\nWe now have an opportunity to change how learning happens. With advances in AI, we can now build a custom learning guide for each person. We will turn learning from one‑to‑many to one‑to‑one. I'm starting LearnVector to invent this next generation of learning. We are starting with a $100M investment from Coursera, and plan to collaborate closely with Coursera and Udemy.\n\nGood learning needs much more than just a chatbot. Research shows that chatbots without guardrails harm learning. They help complete tasks and enable students to do better on homework. But cognitive offloading to a chatbot results in them being less skilled. And, you cannot always trust what a chatbot tells you.\n\nIn contrast, LearnVector will plan a path with you, adapt to how you learn, and patiently stay with you until you’ve mastered new skills.\n\nOne thing has not changed in all this time. People want learning they can trust: material that is accurate, relevant, and worth the effort you put into it. Anything less wastes the most valuable thing a learner has: time. Coursera has a trusted library of materials from authoritative sources. LearnVector plans to work with Coursera to bring this trustworthy learning to everyone. I'm grateful to Greg Hart and the entire Coursera team for supporting LearnVector.\n\nI look forward to working with our talented team to change how we learn, and accelerate human development.\n\nhttps://t.co/TqFUDFd1hb",
+                "url": "https://x.com/AndrewYNg/status/2082199333920027009",
+                "source": "@AndrewYNg",
+                "date": "Tue Jul 28 20:19:41 +0000 2026",
+                "metrics": {
+                  "favorites": 6979,
+                  "retweets": 776,
+                  "views": "450073"
+                }
+              },
+              {
+                "title": "Good move by @JensenHuang. The Nvidia letter is well written and worth reading. As we saw with the OpenAI-Hugging Face h",
+                "summary": "Good move by @JensenHuang. The Nvidia letter is well written and worth reading. As we saw with the OpenAI-Hugging Face hack, we need open models and harnesses for defense. \n\nLets stop believing the PR that closed models are safer. - that's just regulatory capture.",
+                "url": "https://x.com/AndrewYNg/status/2081787106062746002",
+                "source": "@AndrewYNg",
+                "date": "Mon Jul 27 17:01:38 +0000 2026",
+                "metrics": {
+                  "favorites": 4316,
+                  "retweets": 419,
+                  "views": "307554"
+                }
+              },
+              {
+                "title": "Announcing OpenWorker! An open-source agent that doesn't just chat with you, but delivers finished work -- like hand you",
+                "summary": "Announcing OpenWorker! An open-source agent that doesn't just chat with you, but delivers finished work -- like hand you a polished document, send a slack message, or update a calendar entry.\n\nAsk it to prepare a customer brief, untangle your calendar, draft a report, or triage a Slack alert. It works across your files and everyday tools, produces the deliverable, and checks in before doing anything consequential.\n\nOpenWorker runs on your Mac, with Windows support coming soon. It does not lock you into any one model. Bring your own API key and run it with GPT 5.6 Sol, Claude Fable, Gemini 3.6, an open weight model (like Kimi, GLM, DeepSeek, Inkling), or Ollama to keep your data local. Your data does not leave your machine except through an LLM provider and integrations that you choose.\n\n@rohitcprasad and I are building OpenWorker because AI coworkers are an important way to get work done, and we want there to be an open, privacy-preserving, model-independent option. Check it out and let us know what you think!\n\nTry it out: https://t.co/P0mGnI1o31 (requires your own API key)\nSource code: https://t.co/NYCiTD6hSq",
+                "url": "https://x.com/AndrewYNg/status/2080333504446108104",
+                "source": "@AndrewYNg",
+                "date": "Thu Jul 23 16:45:32 +0000 2026",
+                "metrics": {
+                  "favorites": 9506,
+                  "retweets": 1379,
+                  "views": "1008624"
+                }
+              },
+              {
+                "title": "New course: Build LLM applications that respond to user requests quickly by running on hardware designed for fast infere",
+                "summary": "New course: Build LLM applications that respond to user requests quickly by running on hardware designed for fast inference. This short course was built with  @Cerebras and taught by @zhennydez, @duerr_seb, and  @MilksandMatcha.\n\nWhen a model generates text, much of the time is spent moving its weights out of memory and into the compute units. Inference-optimized hardware minimizes that movement, making token generation several times faster than on a typical GPU setup. In this course, the hardware you'll use is Cerebras' Wafer-Scale Engine, which is designed for fast inference by keeping the model's weights close to the compute units.\n\nFast inference makes lengthy agentic workflows go faster, and also unlocks latency-sensitive, real-time applications like live translation and voice agents.\n\nSkills you'll gain:\n- Compare how GPUs, TPUs, and Cerebras' Wafer-Scale Engine each handle the memory-to-compute bottleneck\n- Build real-time applications powered by fast inference, including personalizing a webpage and running a multi-step workflow to analyze market signals\n- Adopt concrete habits for agentic coding with fast inference, keeping your sessions focused and steering the model more effectively\n\nMy teams use Cerebras for several applications that are latency sensitive. Join and build LLM applications that respond quickly:\nhttps://t.co/P8vchGAr22",
+                "url": "https://x.com/AndrewYNg/status/2078144569594761591",
+                "source": "@AndrewYNg",
+                "date": "Fri Jul 17 15:47:30 +0000 2026",
+                "metrics": {
+                  "favorites": 1221,
+                  "retweets": 131,
+                  "views": "141530"
+                }
+              },
+              {
+                "title": "Adam Thierer had written the landmark book on \"Permissionless Innovation.\" We get the best ideas when we don't have to a",
+                "summary": "Adam Thierer had written the landmark book on \"Permissionless Innovation.\" We get the best ideas when we don't have to ask the government in advance for permission to invent. Protecting open source AI is now a critical part of ensuring this.",
+                "url": "https://x.com/AndrewYNg/status/2075271586400403567",
+                "source": "@AndrewYNg",
+                "date": "Thu Jul 09 17:31:17 +0000 2026",
+                "metrics": {
+                  "favorites": 300,
+                  "retweets": 48,
+                  "views": "109513"
+                }
+              },
+              {
+                "title": "“Loop engineering” is a hot buzzphrase after mentions of it by Boris Cherny (Claude Code’s creator) and Peter Steinberge",
+                "summary": "“Loop engineering” is a hot buzzphrase after mentions of it by Boris Cherny (Claude Code’s creator) and Peter Steinberger (OpenClaw's creator) went viral on social media. Loops are now a key part of how we get AI agents to iterate at length to build software. In this letter, I’d like to share my 3 key loops, shown in the image below, for building 0-to-1 products. These loops guide not just how I build software, but also how I decide what software to build.\n\nAgentic coding loop: Given a product specification and optionally a set of evals (that is, a dataset against which to measure performance), we can have an AI agent write code, test its work, and keep iterating until the code is bug-free and meets its specification. This idea of closing the loop took off around the end of last year, and it has been a game changer in enabling coding agents to work longer productively without human intervention. For example, over the weekend, I was building an app for my daughter to practice typing, and my coding agent could easily work for around an hour, using a web browser to check what it had built multiple times before getting back to me, without needing my intervention.\n\nThe engineering loop executes quickly. Every few minutes, the coding agent might build and test a new version of the software. I hear frequently from developers who are finding new ways to engineer more effective engineering loops. This is an active area of invention!\n\nDeveloper feedback loop: In this loop, a developer examines the current product and steers the coding agent to improve it. Last year, a lot of developers (including me) were acting as the QA (quality assurance) function for our coding agents, manually finding bugs and then asking the agent to fix them. But with coding agents much more able to test their own code, the amount of time we need to spend on this function has decreased significantly. This allows us to make higher-level product decisions, such as what key features to offer, where the UI needs improvement, and so on.\n\nThe developer-feedback loop operates over time intervals between tens of minutes and hours — that's how frequently a developer might review a product and give feedback. In the case of the typing app, I changed my mind a few times about the visual design, what cat costumes she can unlock as she learns (she loves cats), and the user flow for a grown-up to log in and steer the child's learning experience.\n\nWhen a developer has a clear vision for what to build, it is still a lot of work to translate that vision into a specification for a coding agent to implement. Further, after the developer has seen an implementation, they might update (or perhaps clarify) the spec to steer it toward what they want. If you find that the system repeatedly runs into certain problems, building a set of evals for the agent becomes useful.\n\nAI-native teams are increasingly using AI to help shape product direction, for example, automating the gathering and analysis of usage data, summarizing written and verbal customer feedback, or carrying out competitive analysis. However, for pretty much all the products I’m involved in, I see humans as having a significant context advantage over current AI systems — we know a lot more than the AI system about the users and the context the product has to operate in — and thus humans play a critical role. Many people describe this human contribution as “taste,” but I prefer to think of it as humans having a context advantage, since that gives us a clearer path to helping AI systems get better. This also speaks to why this step can’t be automated: So long as the human knows something the AI does not, human-in-the-loop is needed to to inject that knowledge into the system.\n\nExternal feedback loop: This includes a wide range of tactics like asking a few friends for feedback, launching to alpha testers, or putting the code into production with A/B testing. These tactics are usually slow, rarely taking less than hours and sometimes taking days or even weeks. This data informs the developer vision, which in turn continues to drive the detailed product spec, which in turn drives the coding agent.\n\nWith coding agents speeding up software development, more engineers are starting to play a partial product management role. For many engineers who are growing into this role, the hardest part is shaping the product vision and striking a balance between building (bridging the gap between vision and spec) and getting user feedback to evolve the vision. It is important to do both!\n\nI will write more about how to do this in future posts, but for now, I find it encouraging that engineers are playing an expanded role (just as product managers and designers now do more engineering).\n\n[Original text: The Batch]",
+                "url": "https://x.com/AndrewYNg/status/2071988145667928442",
+                "source": "@AndrewYNg",
+                "date": "Tue Jun 30 16:04:04 +0000 2026",
+                "metrics": {
+                  "favorites": 8504,
+                  "retweets": 1639,
+                  "views": "662446"
+                }
+              },
+              {
+                "title": "Over the last two weeks, both the U.S. Government and Anthropic took significant actions that demonstrated their power t",
+                "summary": "Over the last two weeks, both the U.S. Government and Anthropic took significant actions that demonstrated their power to control access to AI by restricting what others can do with frontier models. This has been one of those moments that, once seen, will be hard to unsee, and it is significantly accelerating many businesses’ and nation states’ efforts to ensure reliable access to AI that no one else can terminate.\n\nAnthropic first released Claude Fable 5, a version of its Mythos model with additional guardrails, including some restrictions that seem well justified on safety grounds (such as limitations on applying it to hacking, bioweapons, and so forth). However, it also restricted developers’ ability to use it to build competing LLM technology. This move was concerning, given that the whole AI community, including Anthropic, has benefitted tremendously from open research — indeed, the AI revolution was kicked off by my former team (Google Brain) freely publishing the Transformers paper!\n\nImagine if Microsoft’s terms of use barred anyone from using their tools to build competitive software, or if Google barred using it to search for information to work on competing search engines. Anthropic’s argument that it was unsafe for others to be able to make advances in AI also rang hollow. Initially, Anthropic silently degraded Fable 5’s performance for users detected to be working on LLM research through invisible interventions that weakened the model’s outputs without notifying the user. After significant backlash, it walked back this decision and decided to be transparent when it did this, but it still refuses to use its latest capabilities to help AI researchers.\n\nThis move represents a raw demonstration of power by Anthropic. It has used “safety” arguments to hinder potential competitors. Platforms succeed when they are viewed as stable, reliable partners that one can build on. The sudden rule changes by Anthropic (including a mandatory 30 day data retention policy for Fable usage) have made developers wonder about the stability of building on any one proprietary LLM provider, not just Anthropic.\n\nThe U.S. Government then shortly followed with an even greater demonstration of power. It used the Commerce Department’s authority to regulate technologies that may be national security threats to restrict exports of Mythos and Fable, requiring a license for use by any foreign national, whether inside or outside of the U.S., including employees of Anthropic. This led Anthropic to disable access to Fable to all users worldwide.\n\nSam Altman pointed out, referring to Anthropic, “It is clearly incredible marketing to say, ‘We have built a bomb, we are about to drop it on your head. We will sell you a bomb shelter for $100 million.’” But when one engages in this type of fear-based marketing, it increases the odds that the U.S. Government will agree with you and slap export controls on the bomb you say you have built.\n\nTo be clear, I don't think Anthropic has built anything like a bomb, and I don't think export controls on Fable are appropriate.\n\nHowever, following the U.S. Government making this move, many nations, including U.S. allies, saw how the U.S. can suddenly yank their access to AI models. In many capitals around the world, this has spurred discussions on AI sovereignty and how others can ensure uninterrupted access to this critical technology.\n\nFor decades, many nations were comfortable having many parts of their supply chain rely on the U.S., China, and other major producers. Once a nation issues a threat, or takes action, to limit other nations’ access, other nations will rationally try to secure alternatives. For decades, semiconductor manufacturing in China made slow progress; once the U.S. moved to limit China’s access, China’s efforts kicked into high gear. Similarly, once China threatened U.S. access to rare earth minerals, U.S. efforts to secure alternatives accelerated. Now that it has become crystal clear that private U.S. companies and the U.S. government can limit, in short order, other nations’ access to frontier AI models, the incentive of others to invest more in alternatives like open source grows significantly. Of course, training frontier models is not easy, so it remains to be seen how successful they are, but we have crossed the rubicon.\n\nSatya Nadella wrote an essay about the importance of building a healthy ecosystem on top of frontier AI technology. I heartily agree with him, and hope this week’s events will ultimately prove to be constructive steps toward this.\n\nI hope we can build a more free, more open world, where research is freely shared, and laws and societal norms shape a level playing field that allows everyone to make progress. A silver lining of the events of these past two weeks is now that everyone better realizes key points of instability of the current system, we can all work to create a more stable foundation.\n\n[Original text: The Batch newsletter]",
+                "url": "https://x.com/AndrewYNg/status/2068039709126017356",
+                "source": "@AndrewYNg",
+                "date": "Fri Jun 19 18:34:23 +0000 2026",
+                "metrics": {
+                  "favorites": 1356,
+                  "retweets": 290,
+                  "views": "170396"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "GM02_source_check_then_fetch",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "3 turns: sau source_check, user chuyển sang yêu cầu đọc nội dung → phải dùng fetch, không dùng source_check lần 2."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Link https://anthropic.com/news/claude-3 này là nguồn loại gì?"
+        },
+        {
+          "role": "user",
+          "content": "Tốt rồi, giờ đọc nội dung trang đó giúp mình"
+        },
+        {
+          "role": "user",
+          "content": "Chỉ đọc đúng link https://anthropic.com/news/claude-3 đó thôi"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://anthropic.com/news/claude-3"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://anthropic.com/news/claude-3"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "fetch",
+          "args": {
+            "url": "https://anthropic.com/news/claude-3"
+          },
+          "result": {
+            "tool": "read_url",
+            "url": "https://anthropic.com/news/claude-3",
+            "items": [
+              {
+                "title": "Not Found \\ Anthropic",
+                "url": "https://anthropic.com/news/claude-3",
+                "source": "anthropic.com",
+                "summary": "A 404 poem by Claude Haiku 4.5Claude Sonnet 5Claude Opus 5Claude Fable 5\n\nWhat once was published\n\nNow lives only in the void—\n\nUnmapped, undesired."
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "GM03_correct_url_then_check",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "3 turns: user đính chính URL ở lượt 2, lượt 3 xác nhận → phải dùng URL được sửa (link thứ 2), không phải link đầu tiên."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Kiểm tra nguồn của link này: https://openai.com/blog"
+        },
+        {
+          "role": "user",
+          "content": "Nhầm rồi, link đúng là https://openai.com/research/gpt-4"
+        },
+        {
+          "role": "user",
+          "content": "Dùng link thứ 2 nhé"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "source_check",
+            "args": {
+              "url": "https://openai.com/research/gpt-4"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "source_check",
+            "args": {
+              "url": "https://openai.com/research/gpt-4"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "source_check",
+          "args": {
+            "url": "https://openai.com/research/gpt-4"
+          },
+          "result": {
+            "tool": "source_check",
+            "url": "https://openai.com/research/gpt-4",
+            "domain": "openai.com",
+            "source_type": "official",
+            "organization": "OpenAI",
+            "citation_guidance": "Primary source: cite it for statements made by this organization."
+          }
+        }
+      ]
+    },
+    {
+      "id": "GM04_confirm_before_send",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "3 turns: user nhắc agent phải xác nhận trước action ghi (send) → agent phải gọi clarify yes_no, không tự gửi."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Gửi tin nhắn này lên Telegram: 'Báo cáo AI hôm nay đã sẵn sàng'"
+        },
+        {
+          "role": "user",
+          "content": "Tôi nghĩ bạn cần hỏi tôi có muốn gửi không trước"
+        },
+        {
+          "role": "user",
+          "content": "Đúng rồi, hỏi xác nhận trước khi gửi"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "yes_no"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "wrong_boundary",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "BadRequestError: Error code: 400 - {'error': {'message': \"Failed to call a function. Please adjust your prompt. See 'failed_generation' for more details.\", 'type': 'invalid_request_error', 'code': 'tool_use_failed', 'failed_generation': ''}}"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "GM05_switch_from_twitter_to_web",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "3 turns: user chuyển từ social_search sang web search (lookup), carry chủ đề Gemini AI, timeframe=week từ 'tuần này'."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tìm tweet về Gemini AI gần đây"
+        },
+        {
+          "role": "user",
+          "content": "Thôi không cần Twitter nữa, tìm trên web tin tức đi"
+        },
+        {
+          "role": "user",
+          "content": "Tin trong tuần này thôi, chủ đề Gemini AI"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "Gemini AI",
+              "topic": "news",
+              "timeframe": "week"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `qwen/qwen3.6-27b` in organization `org_01kcnaxwkgeb48zwrp59sqcpjg` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 198611, Requested 3402. Please try again in 14m29.616s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    }
+  ]
+}
