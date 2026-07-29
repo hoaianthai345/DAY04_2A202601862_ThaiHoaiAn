@@ -39,7 +39,15 @@ class OpenAIProvider:
         if not api_key:
             raise RuntimeError(f"Missing API key env var: {self.api_key_env}")
 
-        client = OpenAI(api_key=api_key, base_url=self.base_url)
+        # Eval suites must record a failed provider call as evidence instead of
+        # silently spending minutes retrying one case. Values remain overridable
+        # for providers that need a different network profile.
+        client = OpenAI(
+            api_key=api_key,
+            base_url=self.base_url,
+            max_retries=int(os.getenv("MODEL_MAX_RETRIES", "0")),
+            timeout=float(os.getenv("MODEL_TIMEOUT_SECONDS", "20")),
+        )
         kwargs: dict[str, Any] = {
             "model": model or self.default_model,
             "messages": messages,

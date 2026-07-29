@@ -14,5 +14,5 @@ class GroqProvider(OpenAIProvider):
             base_url=os.getenv("GROQ_BASE_URL", "https://api.groq.com/openai/v1"),
             # Local function calling is required for this lab; do not use Groq
             # Compound here because it only supports Groq built-in tools.
-            default_model=os.getenv("GROQ_MODEL", "llama-3.1-8b-instant"),
+            default_model=os.getenv("GROQ_MODEL", "qwen/qwen3.6-27b"),
         )
