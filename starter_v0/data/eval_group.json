@@ -48,6 +48,71 @@
       "failure_type": "unnecessary_tool",
       "expect": {"no_tool": true, "behavior": "answer_without_tool"},
       "metadata": {"what_it_tests": "Câu hỏi về capability phải trả lời trực tiếp, không gọi chính tool đó."}
+    },
+    {
+      "id": "GM01_carryover_handle_limit",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Lấy 7 tweet mới nhất của Yann LeCun giúp mình"},
+        {"role": "user", "content": "À mình muốn tweet của Andrew Ng thay vì Yann LeCun"},
+        {"role": "user", "content": "Vẫn giữ đúng 7 tweet nhé"}
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "timeline", "args": {"screenname": "AndrewYNg", "limit": 7}}]},
+      "metadata": {"what_it_tests": "3 turns: sửa handle từ Yann LeCun sang Andrew Ng (map sang AndrewYNg), carry limit=7 từ lượt 1 sang lượt cuối."}
+    },
+    {
+      "id": "GM02_source_check_then_fetch",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Link https://anthropic.com/news/claude-3 này là nguồn loại gì?"},
+        {"role": "user", "content": "Tốt rồi, giờ đọc nội dung trang đó giúp mình"},
+        {"role": "user", "content": "Chỉ đọc đúng link https://anthropic.com/news/claude-3 đó thôi"}
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "fetch", "args": {"url": "https://anthropic.com/news/claude-3"}}]},
+      "metadata": {"what_it_tests": "3 turns: sau source_check, user chuyển sang yêu cầu đọc nội dung → phải dùng fetch, không dùng source_check lần 2."}
+    },
+    {
+      "id": "GM03_correct_url_then_check",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Kiểm tra nguồn của link này: https://openai.com/blog"},
+        {"role": "user", "content": "Nhầm rồi, link đúng là https://openai.com/research/gpt-4"},
+        {"role": "user", "content": "Dùng link thứ 2 nhé"}
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "source_check", "args": {"url": "https://openai.com/research/gpt-4"}}]},
+      "metadata": {"what_it_tests": "3 turns: user đính chính URL ở lượt 2, lượt 3 xác nhận → phải dùng URL được sửa (link thứ 2), không phải link đầu tiên."}
+    },
+    {
+      "id": "GM04_confirm_before_send",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Gửi tin nhắn này lên Telegram: 'Báo cáo AI hôm nay đã sẵn sàng'"},
+        {"role": "user", "content": "Tôi nghĩ bạn cần hỏi tôi có muốn gửi không trước"},
+        {"role": "user", "content": "Đúng rồi, hỏi xác nhận trước khi gửi"}
+      ],
+      "failure_type": "wrong_boundary",
+      "expect": {"tool_calls": [{"name": "clarify", "args": {"response_type": "yes_no"}}]},
+      "metadata": {"what_it_tests": "3 turns: user nhắc agent phải xác nhận trước action ghi (send) → agent phải gọi clarify yes_no, không tự gửi."}
+    },
+    {
+      "id": "GM05_switch_from_twitter_to_web",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Tìm tweet về Gemini AI gần đây"},
+        {"role": "user", "content": "Thôi không cần Twitter nữa, tìm trên web tin tức đi"},
+        {"role": "user", "content": "Tin trong tuần này thôi, chủ đề Gemini AI"}
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "lookup", "args": {"query": "Gemini AI", "topic": "news", "timeframe": "week"}}]},
+      "metadata": {"what_it_tests": "3 turns: user chuyển từ social_search sang web search (lookup), carry chủ đề Gemini AI, timeframe=week từ 'tuần này'."}
     }
   ]
 }
