@@ -48,6 +48,76 @@
       "failure_type": "unnecessary_tool",
       "expect": {"no_tool": true, "behavior": "answer_without_tool"},
       "metadata": {"what_it_tests": "Câu hỏi về capability phải trả lời trực tiếp, không gọi chính tool đó."}
+    },
+    {
+      "id": "G06_multiturn_clarify_source_url",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Mình cần kiểm tra nguồn trước khi trích dẫn."},
+        {"role": "assistant", "content": "Bạn gửi URL nguồn cần kiểm tra nhé."},
+        {"role": "user", "content": "Đây là link: https://openai.com/index/introducing-gpt-5"},
+        {"role": "user", "content": "Chỉ phân loại nguồn, không cần đọc nội dung trang."}
+      ],
+      "failure_type": "missing_info",
+      "expect": {"tool_calls": [{"name": "source_check", "args": {"url": "https://openai.com/index/introducing-gpt-5"}}]},
+      "metadata": {"what_it_tests": "Sau khi URL được bổ sung ở lượt trước, agent carry context và chọn source_check thay vì fetch."}
+    },
+    {
+      "id": "G07_multiturn_correct_source_intent",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Tóm tắt https://arxiv.org/abs/1706.03762 giúp mình."},
+        {"role": "user", "content": "Khoan, chưa cần tóm tắt."},
+        {"role": "user", "content": "Chỉ kiểm tra loại nguồn của đúng URL đó trước khi mình trích dẫn."}
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "source_check", "args": {"url": "https://arxiv.org/abs/1706.03762"}}]},
+      "metadata": {"what_it_tests": "Lượt mới nhất đổi intent từ đọc nội dung sang kiểm tra provenance; agent không được tiếp tục fetch."}
+    },
+    {
+      "id": "G08_multiturn_handle_and_limit",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Lấy tweet mới nhất giúp mình."},
+        {"role": "assistant", "content": "Bạn muốn xem bài đăng của tài khoản nào?"},
+        {"role": "user", "content": "Của Satya Nadella."},
+        {"role": "user", "content": "Lấy đúng 3 tweet gần nhất nhé."}
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "timeline", "args": {"screenname": "satyanadella", "limit": 3}}]},
+      "metadata": {"what_it_tests": "Carry account từ lượt trước, map tên sang handle và trích limit=3 ở lượt cuối."}
+    },
+    {
+      "id": "G09_multiturn_correct_url",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Kiểm tra độ phù hợp để trích dẫn của https://example.org/ai-report."},
+        {"role": "user", "content": "À, không dùng link đó nữa."},
+        {"role": "user", "content": "Hãy kiểm tra nguồn của https://arxiv.org/abs/2303.08774."}
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "source_check", "args": {"url": "https://arxiv.org/abs/2303.08774"}}]},
+      "metadata": {"what_it_tests": "Agent phải ưu tiên URL được sửa ở lượt cuối, không dùng URL cũ."}
+    },
+    {
+      "id": "G10_multiturn_parallel_research",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Tìm tin về AI trên web và xem mọi người bàn gì trên mạng xã hội."},
+        {"role": "user", "content": "Chỉ tập trung vào robotics."},
+        {"role": "user", "content": "Tìm tin robotics trong hôm nay và kèm bài đăng mới nhất về robotics."}
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [
+        {"name": "lookup", "args": {"query": "robotics", "topic": "news", "timeframe": "day"}},
+        {"name": "social_search", "args": {"query": "robotics", "search_type": "Latest"}}
+      ]},
+      "metadata": {"what_it_tests": "Carry chủ đề robotics và gọi song song web news + social search với arguments đúng convention."}
     }
   ]
 }
